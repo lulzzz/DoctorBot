@@ -9,7 +9,7 @@ reload(sys)
 
 # url = "http://umm.edu/health/medical/ency/symptoms?c=B"
 
-def ExtractSymptomsOrDiseasesList( url , DictForSymptomsAndDiseases , ch ):
+def ExtractList( url , MedicalData , ch ):
 
 	
 	leftUrl =url;
@@ -23,11 +23,11 @@ def ExtractSymptomsOrDiseasesList( url , DictForSymptomsAndDiseases , ch ):
 			for category in categories:
 				links = category.find_all("a")
 				for link in links:
-					DictForSymptomsAndDiseases[link.text] = [ch]
+					MedicalData[link.text] = [ch]
 
 
 
-def CrawlData( url , DictForSymptomsAndDiseases ):
+def CrawlData( url , MedicalData ):
 
 	
 	leftUrl =url;
@@ -42,15 +42,15 @@ def CrawlData( url , DictForSymptomsAndDiseases ):
 				links = category.find_all("a")
 				for link in links:
 
-					if link.text in DictForSymptomsAndDiseases.keys():
+					if link.text in MedicalData.keys():
 						print link.text
 						data  = {}
 						newUrl = urlparse.urljoin(req.url, link.get("href"))
-						ExtractData( newUrl, data ,DictForSymptomsAndDiseases )
-						DictForSymptomsAndDiseases[link.text].append(data)
+						ExtractData( newUrl, data ,MedicalData )
+						MedicalData[link.text].append(data)
 						
 
-def ExtractData( url , data , DictForSymptomsAndDiseases ):
+def ExtractData( url , data , MedicalData ):
 
 	
 	req = requests.get(url)
@@ -74,7 +74,7 @@ def ExtractData( url , data , DictForSymptomsAndDiseases ):
 			references = []
 			count=0
 			for reference in referenceList:
-				if reference.text in DictForSymptomsAndDiseases:
+				if reference.text in MedicalData:
 					count+=1
 					references.append(reference.text)
 			print "\tSection Header", sectionHeader,"references count",count
@@ -85,7 +85,7 @@ def ExtractData( url , data , DictForSymptomsAndDiseases ):
 				elif str(eachElement).find("<ul>") >= 0 :
 					listItems = eachElement.find_all("li")
 					for item in listItems:
-						if item.text in DictForSymptomsAndDiseases:
+						if item.text in MedicalData:
 							references.append(item.text) 
 						textBetweenTags += item.text + "\n"
 					

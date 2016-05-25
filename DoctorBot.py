@@ -22,48 +22,56 @@ client = pymongo.MongoClient('mongodb://localhost:27017/')
 db = client.DoctorBotDB
 
 
-# symptoms_url =  "http://umm.edu/health/medical/ency/symptoms?c="
+symptoms_url =  "http://umm.edu/health/medical/ency/symptoms?c="
 
-# disease_url = "http://umm.edu/health/medical/ency/diseases?c="
+disease_url = "http://umm.edu/health/medical/ency/diseases?c="
 
-# #ExtractSymptomsOrDiseasesList(symptoms_url);
+test_url = "http://umm.edu/health/medical/ency/tests?c="
 
-# DictForSymptomsAndDiseases = {}
+surgery_url = "http://umm.edu/health/medical/ency/surgery?c="
 
-# print "extracting Disease List"
-# ExtractSymptomsOrDiseasesList(disease_url , DictForSymptomsAndDiseases , 'd')
+ #ExtractSymptomsOrDiseasesOrTestList(symptoms_url);
 
-# print "extracting Symptoms List"
-# ExtractSymptomsOrDiseasesList(symptoms_url , DictForSymptomsAndDiseases , 's')
+MedicalData = {}
+
+print "extracting Disease List"
+ExtractList(disease_url , MedicalData , 'd')
+
+print "extracting Symptoms List"
+ExtractList(symptoms_url , MedicalData , 's')
+
+print "extracting Test List"
+ExtractList(test_url , MedicalData , 't' )
+
+print "extracting surgery List"
+ExtractList(surgery_url , MedicalData , 'u' )
+
+ContentUrl = "https://www.nlm.nih.gov/medlineplus/ency/encyclopedia_"
+
+print "Crawling data"
+
+CrawlData( ContentUrl , MedicalData )
+
+print "Adding into Database"
+
+f = open("dict",'w')
+
+pickle.dump(MedicalData, f, pickle.HIGHEST_PROTOCOL)
 
 
 
-# ContentUrl = "https://www.nlm.nih.gov/medlineplus/ency/encyclopedia_"
+AddingIntoDB( MedicalData , db )
 
-# print "Crawling data"
-
-# CrawlData( ContentUrl , DictForSymptomsAndDiseases )
-
-# print "Adding into Database"
-
-# f = open("dict",'w')
-
-# pickle.dump(DictForSymptomsAndDiseases, f, pickle.HIGHEST_PROTOCOL)
+# s = raw_input("Enter Diseases")
 
 
+# l = dict(getDiseasesFromSymptoms(s.split(":"),db)).items()
 
-# AddingIntoDB( DictForSymptomsAndDiseases , db )
-
-s = raw_input("Enter Diseases")
-
-
-l = dict(getDiseasesFromSymptoms(s.split(":"),db)).items()
-
-l.sort(key=lambda x:x[1],reverse=True)
+# l.sort(key=lambda x:x[1],reverse=True)
 # l = dict(getSymptomsFromDisease(s,db)).items()
 
 # l.sort(key=lambda x:x[1],reverse=True)
-print l
+#print l
 
 
 
