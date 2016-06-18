@@ -1,4 +1,3 @@
-
 from scrapper import *
 
 from query import *
@@ -19,7 +18,7 @@ client = pymongo.MongoClient('mongodb://localhost:27017/')
 
 
 
-db = client.DoctorBotDB
+db = client.DoctorBotDBV2
 
 
 symptoms_url =  "http://umm.edu/health/medical/ency/symptoms?c="
@@ -54,13 +53,13 @@ CrawlData( ContentUrl , MedicalData )
 
 print "Adding into Database"
 
-f = open("dict",'w')
+f = open("newDict",'w')
 
 pickle.dump(MedicalData, f, pickle.HIGHEST_PROTOCOL)
 
 
 
-AddingIntoDB( MedicalData , db )
+#AddingIntoDB( MedicalData , db )
 
 # s = raw_input("Enter Diseases")
 

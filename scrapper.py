@@ -23,7 +23,7 @@ def ExtractList( url , MedicalData , ch ):
 			for category in categories:
 				links = category.find_all("a")
 				for link in links:
-					MedicalData[link.text] = [ch]
+					MedicalData[link.text.lower()] = [ch]
 
 
 
@@ -42,12 +42,12 @@ def CrawlData( url , MedicalData ):
 				links = category.find_all("a")
 				for link in links:
 
-					if link.text in MedicalData.keys():
+					if link.text.lower() in MedicalData.keys():
 						print link.text
 						data  = {}
 						newUrl = urlparse.urljoin(req.url, link.get("href"))
 						ExtractData( newUrl, data ,MedicalData )
-						MedicalData[link.text].append(data)
+						MedicalData[link.text.lower()].append(data)
 						
 
 def ExtractData( url , data , MedicalData ):
@@ -60,7 +60,7 @@ def ExtractData( url , data , MedicalData ):
 		description = content.find("div",{"id":"ency_summary"})
 		sections = content.find_all("div",{"class":"section"})
 		for section in sections:
-			sectionHeader = section.find("div",{"class":"section-header"}).text.strip('\t\r\n ')
+			sectionHeader = section.find("div",{"class":"section-header"}).text.strip('\t\r\n ').lower()
 			sectionBody = section.find("div",{"class":"section-body"})
 			
 			#sectionBody = sectionBody.findAll()
@@ -74,9 +74,9 @@ def ExtractData( url , data , MedicalData ):
 			references = []
 			count=0
 			for reference in referenceList:
-				if reference.text in MedicalData:
+				if reference.text.lower() in MedicalData:
 					count+=1
-					references.append(reference.text)
+					references.append(reference.text.lower())
 			print "\tSection Header", sectionHeader,"references count",count
 			for eachElement in  InSection:
 				
@@ -85,8 +85,8 @@ def ExtractData( url , data , MedicalData ):
 				elif str(eachElement).find("<ul>") >= 0 :
 					listItems = eachElement.find_all("li")
 					for item in listItems:
-						if item.text in MedicalData:
-							references.append(item.text) 
+						if item.text.lower() in MedicalData:
+							references.append(item.text.lower()) 
 						textBetweenTags += item.text + "\n"
 					
 
